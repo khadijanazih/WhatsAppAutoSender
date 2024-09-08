@@ -1,0 +1,28 @@
+import firebase_admin
+from firebase_admin import credentials, initialize_app,storage
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate('firebase_data/credentials.json')
+app = initialize_app(cred, {'storageBucket': 'docsspace-f400a.appspot.com'})
+
+# Function to upload an image with a phone number as the file name
+def upload_image(phone_number, image_path):
+    bucket = storage.bucket()
+    blob = bucket.blob(f"images/{phone_number}.jpg")
+
+    # Upload the image file
+    blob.upload_from_filename(image_path)
+    blob = bucket.blob(f"images/{phone_number}.jpg")
+    # Make the file public
+    try:
+        blob.make_public()
+        # Get the download URL
+    except Exception as e:
+        print(f'An error occurred: {e}')
+
+    download_url = blob.public_url
+    print(f'Image uploaded successfully. Download URL: {download_url}')
+
+# Example usage
+phone_number = "+212641239377"
+image_path = f'C:\\Users\\star1\\Downloads\\{phone_number}.jpg'
+upload_image(phone_number, image_path)
