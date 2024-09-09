@@ -1,19 +1,15 @@
 import sys
 import os
 from firebase_admin import credentials, initialize_app,storage
-# Initialize Firebase Admin SDK
+from firebase_admin.storage import bucket
 
 # This will correctly locate your bundled file at runtime
-if getattr(sys, 'frozen', False):
-    # We are running in a PyInstaller bundle
-    base_path = sys._MEIPASS
-else:
-    # We are running in a normal Python environment
-    base_path = os.path.abspath(".")
+_BASE_PATH_ = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
 
-# Load your data file from the base path
-json_file_path = os.path.join(base_path, 'firebase_data\\credentials.json')
-cred = credentials.Certificate(json_file_path)
-print(json_file_path)
-app = initialize_app(cred, {'storageBucket': 'docsspace-f400a.appspot.com'})
+# setup firebase connectivity
+_JASON_FILE_PATH_ = os.path.join(_BASE_PATH_, 'firebase_data\\credentials.json')
+_FIREBASE_CREDENTIALS_ = credentials.Certificate(_JASON_FILE_PATH_)
+_STORAGE_OPTIONS_ = {'storageBucket': 'docsspace-f400a.appspot.com'}
+_FIREBASE_DIR_= 'images'
+app = initialize_app(_FIREBASE_CREDENTIALS_, _STORAGE_OPTIONS_)
 bucket = storage.bucket()
